@@ -67,6 +67,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->booklets = new ArrayCollection();
     }
 
+    public function __toString(): string
+    {
+        return $this->getFirstName(). ' '. $this->getLastName();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -101,7 +106,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = 'user';
 
         return array_unique($roles);
     }

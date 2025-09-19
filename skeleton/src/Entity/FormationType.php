@@ -28,7 +28,7 @@ class FormationType
     /**
      * @var Collection<int, Activity>
      */
-    #[ORM\OneToMany(targetEntity: Activity::class, mappedBy: 'formationType', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Activity::class, mappedBy: 'formationType', orphanRemoval: true, cascade: ['persist'])]
     private Collection $activity;
 
     /**
@@ -41,6 +41,11 @@ class FormationType
     {
         $this->activity = new ArrayCollection();
         $this->formations = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->getName() ?? 'Type de la formation';
     }
 
     public function getId(): ?int

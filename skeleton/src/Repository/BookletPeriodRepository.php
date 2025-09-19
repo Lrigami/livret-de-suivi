@@ -2,34 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\Booklet;
+use App\Entity\BookletPeriod;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Booklet>
+ * @extends ServiceEntityRepository<BookletPeriod>
  */
-class BookletRepository extends ServiceEntityRepository
+class BookletPeriodRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Booklet::class);
+        parent::__construct($registry, BookletPeriod::class);
     }
-
-    public function findByStudentAndFormation($student, $formation): ?Booklet
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.student = :student')
-            ->andWhere('b.formation = :formation')
-            ->setParameter('student', $student)
-            ->setParameter('formation', $formation)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
-
 
 //    /**
-//     * @return Booklet[] Returns an array of Booklet objects
+//     * @return BookletPeriod[] Returns an array of BookletPeriod objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -43,7 +31,7 @@ class BookletRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Booklet
+//    public function findOneBySomeField($value): ?BookletPeriod
 //    {
 //        return $this->createQueryBuilder('b')
 //            ->andWhere('b.exampleField = :val')

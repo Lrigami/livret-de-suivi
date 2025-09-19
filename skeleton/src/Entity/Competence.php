@@ -20,6 +20,11 @@ class Competence
     #[ORM\JoinColumn(nullable: false)]
     private ?Activity $activity = null;
 
+    public function __toString() 
+    {
+        return $this->name ?? 'Compétence';
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -21,7 +21,7 @@ class Activity
     /**
      * @var Collection<int, Competence>
      */
-    #[ORM\OneToMany(targetEntity: Competence::class, mappedBy: 'activity', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Competence::class, mappedBy: 'activity', orphanRemoval: true, cascade: ['persist'])]
     private Collection $competence;
 
     #[ORM\ManyToOne(inversedBy: 'activity')]
@@ -31,6 +31,11 @@ class Activity
     public function __construct()
     {
         $this->competence = new ArrayCollection();
+    }
+
+    public function __toString() 
+    {
+        return $this->name ?? 'Activité';
     }
 
     public function getId(): ?int

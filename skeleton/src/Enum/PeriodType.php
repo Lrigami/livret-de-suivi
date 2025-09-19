@@ -4,6 +4,9 @@ namespace App\Enum;
 
 enum PeriodType: string
 {
-    case open = 'open';
-    case closed = 'close';
+    case vacances = 'Vacances';
+    case formation = 'Formation';
+    case stage = 'Stage';
+    case fermé = 'Pont/Jour férié';
 }
+

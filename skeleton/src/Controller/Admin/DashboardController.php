@@ -8,6 +8,7 @@ use App\Entity\Booklet;
 use App\Entity\Formation;
 use App\Entity\FormationType;
 use Symfony\Component\HttpFoundation\Response;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
@@ -66,5 +67,11 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Types de formations', 'fas fa-info-circle', FormationType::class);
         yield MenuItem::section('Livrets');
         yield MenuItem::linkToCrud('Livrets de suivi', 'fas fa-comments', Booklet::class);
+    }
+
+    public function configureAssets(): Assets
+    {
+        return parent::configureAssets()
+            ->addAssetMapperEntry('app', 'ckeditor-init');
     }
 }

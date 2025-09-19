@@ -23,18 +23,18 @@ class Booklet
     #[ORM\JoinColumn(nullable: false)]
     private ?Formation $formation = null;
 
-    /**
-     * @var Collection<int, Period>
-     */
-    #[ORM\ManyToMany(targetEntity: Period::class, inversedBy: 'booklets')]
-    private Collection $period;
-
     #[ORM\Column]
     private ?bool $archived = null;
 
+    /**
+     * @var Collection<int, BookletPeriod>
+     */
+    #[ORM\OneToMany(targetEntity: BookletPeriod::class, mappedBy: 'booklet', cascade:['persist'])]
+    private Collection $bookletPeriods;
+
     public function __construct()
     {
-        $this->period = new ArrayCollection();
+        $this->bookletPeriods = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -66,30 +66,6 @@ class Booklet
         return $this;
     }
 
-    /**
-     * @return Collection<int, Period>
-     */
-    public function getPeriod(): Collection
-    {
-        return $this->period;
-    }
-
-    public function addPeriod(Period $period): static
-    {
-        if (!$this->period->contains($period)) {
-            $this->period->add($period);
-        }
-
-        return $this;
-    }
-
-    public function removePeriod(Period $period): static
-    {
-        $this->period->removeElement($period);
-
-        return $this;
-    }
-
     public function isArchived(): ?bool
     {
         return $this->archived;
@@ -98,6 +74,36 @@ class Booklet
     public function setArchived(bool $archived): static
     {
         $this->archived = $archived;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BookletPeriod>
+     */
+    public function getBookletPeriods(): Collection
+    {
+        return $this->bookletPeriods;
+    }
+
+    public function addBookletPeriod(BookletPeriod $bookletPeriod): static
+    {
+        if (!$this->bookletPeriods->contains($bookletPeriod)) {
+            $this->bookletPeriods->add($bookletPeriod);
+            $bookletPeriod->setBooklet($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBookletPeriod(BookletPeriod $bookletPeriod): static
+    {
+        if ($this->bookletPeriods->removeElement($bookletPeriod)) {
+            // set the owning side to null (unless already changed)
+            if ($bookletPeriod->getBooklet() === $this) {
+                $bookletPeriod->setBooklet(null);
+            }
+        }
 
         return $this;
     }

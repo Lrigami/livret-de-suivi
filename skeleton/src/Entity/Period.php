@@ -29,18 +29,27 @@ class Period
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $content = null;
-
     /**
      * @var Collection<int, Booklet>
      */
     #[ORM\ManyToMany(targetEntity: Booklet::class, mappedBy: 'period')]
     private Collection $booklets;
 
+    /**
+     * @var Collection<int, BookletPeriod>
+     */
+    #[ORM\OneToMany(targetEntity: BookletPeriod::class, mappedBy: 'period')]
+    private Collection $bookletPeriods;
+
     public function __construct()
     {
         $this->booklets = new ArrayCollection();
+        $this->bookletPeriods = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->name ?? 'Période';
     }
 
     public function getId(): ?int
@@ -96,18 +105,6 @@ class Period
         return $this;
     }
 
-    public function getContent(): ?string
-    {
-        return $this->content;
-    }
-
-    public function setContent(?string $content): static
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Booklet>
      */
@@ -130,6 +127,36 @@ class Period
     {
         if ($this->booklets->removeElement($booklet)) {
             $booklet->removePeriod($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BookletPeriod>
+     */
+    public function getBookletPeriods(): Collection
+    {
+        return $this->bookletPeriods;
+    }
+
+    public function addBookletPeriod(BookletPeriod $bookletPeriod): static
+    {
+        if (!$this->bookletPeriods->contains($bookletPeriod)) {
+            $this->bookletPeriods->add($bookletPeriod);
+            $bookletPeriod->setPeriod($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBookletPeriod(BookletPeriod $bookletPeriod): static
+    {
+        if ($this->bookletPeriods->removeElement($bookletPeriod)) {
+            // set the owning side to null (unless already changed)
+            if ($bookletPeriod->getPeriod() === $this) {
+                $bookletPeriod->setPeriod(null);
+            }
         }
 
         return $this;
