@@ -86,6 +86,15 @@ class Booklet
         return $this->bookletPeriods;
     }
 
+    public function getFilteredBookletPeriods(): Collection 
+    {
+        return $this->bookletPeriods->filter(function (BookletPeriod $bp) {
+        $type = $bp->getPeriod()->getType();
+        $typeValue = is_object($type) && method_exists($type, 'getName') ? $type->getName() : $type;
+        return in_array($typeValue, ['Stage', 'Formation']);
+    });
+    }
+
     public function addBookletPeriod(BookletPeriod $bookletPeriod): static
     {
         if (!$this->bookletPeriods->contains($bookletPeriod)) {

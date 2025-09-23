@@ -16,6 +16,15 @@ class BookletPeriodRepository extends ServiceEntityRepository
         parent::__construct($registry, BookletPeriod::class);
     }
 
+    public function findByBookletId($bookletid)
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.booklet = :booklet_id')
+            ->setParameter('booklet_id', $bookletid)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return BookletPeriod[] Returns an array of BookletPeriod objects
 //     */

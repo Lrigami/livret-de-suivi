@@ -7,5 +7,5 @@ import './bootstrap.js';
  */
 import './styles/app.css';
 import './styles/ckeditor5.css';
-
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+import './calendar.js';
+import './js/ckeditor-init.js'

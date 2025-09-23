@@ -8,5 +8,9 @@ enum PeriodType: string
     case formation = 'Formation';
     case stage = 'Stage';
     case fermé = 'Pont/Jour férié';
+
+    public function getName() {
+        return $this->value;
+    }
 }
 

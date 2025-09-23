@@ -20,6 +20,10 @@ return [
         'path' => './assets/js/ckeditor-init.js',
         'entrypoint' => true,
     ],
+    'full-calendar' => [
+        'path' => './assets/calendar.js',
+        'entrypoint' => true,
+    ],
     '@hotwired/stimulus' => [
         'version' => '3.2.2',
     ],

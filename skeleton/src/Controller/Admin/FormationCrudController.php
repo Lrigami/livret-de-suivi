@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Period;
 use App\Entity\Booklet;
 use App\Entity\Formation;
+use App\Entity\BookletPeriod;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -60,32 +61,49 @@ class FormationCrudController extends AbstractCrudController
     {
         // Récupérer toutes les periods formation/stage qui chevauchent la formation
         $periods = $em->getRepository(Period::class)->createQueryBuilder('p')
-            ->where('p.type IN (:types)')
             ->andWhere('p.start_date <= :end')
             ->andWhere('p.end_date >= :start')
-            ->setParameter('types', ['formation', 'stage'])
             ->setParameter('start', $formation->getBeginAt())
             ->setParameter('end', $formation->getEndAt())
             ->getQuery()
             ->getResult();
 
         $bookletRepo = $em->getRepository(Booklet::class);
+        $bookletPeriodRepo = $em->getRepository(BookletPeriod::class);
 
         foreach ($formation->getStudent() as $student) {
 
             // Vérifie si un booklet existe déjà pour cet étudiant et cette formation
             $existingBooklet = $bookletRepo->findByStudentAndFormation($student, $formation);
-            if ($existingBooklet) {
-                continue; // ne rien faire si déjà existant
+            $booklet = '';
+            // Si un livret n'existe pas, on le crée et on l'assigne
+            if (!$existingBooklet) {
+                $booklet = new Booklet();
+                $booklet->setStudent($student);
+                $booklet->setFormation($formation);
+                $booklet->setArchived(false);
+            } 
+            // sinon on récupère le livret actuel de l'étudiant
+            else {
+                $booklet = $existingBooklet;
             }
-            $booklet = new Booklet();
-            $booklet->setStudent($student);
-            $booklet->setFormation($formation);
-            $booklet->setArchived(false);
-
-            // Ajouter les periods filtrées
+            
+            // On ajoute les périodes filtrées si elles ne sont pas déjà présentes
             foreach ($periods as $period) {
-                $booklet->addPeriod($period);
+                // si elle existe déjà, on ne l'ajoute pas
+                $existingBP = $bookletPeriodRepo->findOneBy([
+                    'booklet' => $booklet,
+                    'period' => $period,
+                ]);
+
+                if ($existingBP) {
+                    continue; // déjà associé
+                }
+                // sinon on l'ajoute
+                $bookletPeriod = new BookletPeriod();
+                $bookletPeriod->setBooklet($booklet);
+                $bookletPeriod->setPeriod($period);
+                $em->persist($bookletPeriod);
             }
 
             $em->persist($booklet);
@@ -121,7 +139,7 @@ class FormationCrudController extends AbstractCrudController
                 ->setQueryBuilder(function ($qb) {
                     return $qb
                     ->andWhere("entity.roles LIKE :role")
-                    ->setParameter('role', '%admin%');
+                    ->setParameter('role', '%ROLE_ADMIN%');
                 }),
             AssociationField::new('type', 'Type de formation'),
             // ->renderAsEmbeddedForm(FormationTypeCrudController::class),
@@ -138,8 +156,8 @@ class FormationCrudController extends AbstractCrudController
             AssociationField::new('student', 'Apprenants')
                 ->setQueryBuilder(function ($qb) {
                     return $qb
-                    ->andWhere("entity.roles NOT LIKE :role")
-                    ->setParameter('role', '%admin%');
+                    ->andWhere("entity.roles LIKE :role")
+                    ->setParameter('role', '%ROLE_APPRENANT%');
                 })
                 ->setFormTypeOptions([
                     'by_reference' => false,

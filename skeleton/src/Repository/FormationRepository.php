@@ -16,6 +16,16 @@ class FormationRepository extends ServiceEntityRepository
         parent::__construct($registry, Formation::class);
     }
 
+    public function findByDate($start, $end)
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.begin_at <= :startdate')
+            ->andWhere('b.end_at >= :enddate')
+            ->setParameter('startdate', $start)
+            ->setParameter('enddate', $end)
+            ->getQuery()
+            ->getResult();
+    }
 //    /**
 //     * @return Formation[] Returns an array of Formation objects
 //     */

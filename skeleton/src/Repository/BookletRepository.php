@@ -27,6 +27,23 @@ class BookletRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function findByStudent($student): ?Booklet
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.student = :student')
+            ->setParameter('student', $student)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findByFormation($formation)
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.formation = :formation')
+            ->setParameter('formation', $formation)
+            ->getQuery()
+            ->getResult();
+    }
 
 //    /**
 //     * @return Booklet[] Returns an array of Booklet objects

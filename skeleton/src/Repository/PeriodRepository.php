@@ -16,6 +16,15 @@ class PeriodRepository extends ServiceEntityRepository
         parent::__construct($registry, Period::class);
     }
 
+    public function findByTypeName($name)
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.type <= :typename')
+            ->setParameter('typename', $name)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Period[] Returns an array of Period objects
 //     */

@@ -313,9 +313,8 @@ const editorConfig = {
 	translations: [translations]
 };
 
-console.log(document.querySelectorAll('textarea.ckeditor'));
-function initCkeditors(context = document) {
-    context.querySelectorAll('textarea.ckeditor').forEach((el) => {
+function initCkeditors() {
+    document.querySelectorAll('textarea.ckeditor').forEach((el) => {
         // éviter de ré-initialiser deux fois le même textarea
         if (!el.classList.contains('ck-editor-enabled')) {
             ClassicEditor.create(el, editorConfig, {
@@ -329,14 +328,9 @@ function initCkeditors(context = document) {
     });
 }
 
-// Init au premier chargement
-document.addEventListener('DOMContentLoaded', () => {
-    initCkeditors();
-});
-
 // Ré-init quand EasyAdmin ajoute un élément dans une collection
 document.addEventListener('ea.collection.item-added', (event) => {
     initCkeditors(event.target);
 });
 
-console.log("ckeditor initialised");
+document.addEventListener('turbo:load', initCkeditors);

@@ -59,7 +59,7 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::section('Users');
-        yield MenuItem::linkToCrud('Apprenants', 'fas fa-user', User::class);
+        yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class);
         yield MenuItem::section('Palnning');
         yield MenuItem::linkToCrud('Périodes', 'fas fa-calendar', Period::class);
         yield MenuItem::section('Formation');
@@ -72,6 +72,6 @@ class DashboardController extends AbstractDashboardController
     public function configureAssets(): Assets
     {
         return parent::configureAssets()
-            ->addAssetMapperEntry('app', 'ckeditor-init');
+            ->addAssetMapperEntry('app', 'ckeditor-init', 'full-calendar');
     }
 }

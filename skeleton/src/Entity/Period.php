@@ -28,13 +28,7 @@ class Period
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
-
-    /**
-     * @var Collection<int, Booklet>
-     */
-    #[ORM\ManyToMany(targetEntity: Booklet::class, mappedBy: 'period')]
-    private Collection $booklets;
-
+    
     /**
      * @var Collection<int, BookletPeriod>
      */
@@ -101,33 +95,6 @@ class Period
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Booklet>
-     */
-    public function getBooklets(): Collection
-    {
-        return $this->booklets;
-    }
-
-    public function addBooklet(Booklet $booklet): static
-    {
-        if (!$this->booklets->contains($booklet)) {
-            $this->booklets->add($booklet);
-            $booklet->addPeriod($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBooklet(Booklet $booklet): static
-    {
-        if ($this->booklets->removeElement($booklet)) {
-            $booklet->removePeriod($this);
-        }
 
         return $this;
     }

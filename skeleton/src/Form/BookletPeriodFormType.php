@@ -17,10 +17,11 @@ class BookletPeriodFormType extends AbstractType
     {
         $builder
             ->add('content', TextareaType::class, [
-                'label' => 'Contenu',
+                'label' => 'Contenu', 
                 'attr' => [
                     'class' => 'ckeditor',
                 ],
+                'required' => false
             ])
         ;
     }

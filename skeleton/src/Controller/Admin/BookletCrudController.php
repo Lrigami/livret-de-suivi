@@ -27,7 +27,7 @@ class BookletCrudController extends AbstractCrudController
             AssociationField::new('formation', 'Formation')
                 ->setFormTypeOptions(['disabled' => true]),
             BooleanField::new('archived')->hideOnForm(),
-            CollectionField::new('bookletPeriods', 'Périodes')
+            CollectionField::new('filteredBookletPeriods', 'Périodes')
                 ->onlyOnForms()
                 ->allowAdd(false)
                 ->allowDelete(false)

@@ -18,7 +18,7 @@ class BookletPeriod
     #[ORM\JoinColumn(nullable: false)]
     private ?Booklet $booklet = null;
 
-    #[ORM\ManyToOne(inversedBy: 'bookletPeriods')]
+    #[ORM\ManyToOne(inversedBy: 'bookletPeriods', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Period $period = null;
 
