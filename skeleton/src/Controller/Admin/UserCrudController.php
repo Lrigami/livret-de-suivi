@@ -21,7 +21,6 @@ class UserCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $user = new User();
-        $user->setRoles(['user']);
         return $user;
     }
 
@@ -44,9 +43,9 @@ class UserCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setChoices(
                     [
-                        'Apprenant' => 'user',
-                        'User' => 'user',
-                        'Formateur' => 'admin'
+                        'Apprenant' => 'ROLE_APPRENANT',
+                        'User' => 'ROLE_USER',
+                        'Formateur' => 'ROLE_ADMIN'
                     ]
                 )
         ];

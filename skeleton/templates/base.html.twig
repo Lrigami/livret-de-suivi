@@ -12,6 +12,9 @@
             <ul>
                 {% if app.user %}
                     <li><a aria-current="page" href="{{ path('app_home') }}">Accueil</a></li>
+                    {% if app.user.hasRole('ROLE_ADMIN') %}
+                        <li><a aria-current="page" href="{{ path('admin') }}">Gestion admin</a></li>
+                    {% endif %}
                     <li><a aria-current="page" href="{{ path('app_logout') }}">Déconnexion</a></li>
                 {% endif %}
                 {% if not app.user %}
@@ -22,17 +25,9 @@
         </nav>
         {% block body %}{% endblock %}
         {% block javascripts %}
-            {# <script src="{{ asset('app.js') }}"></script> #}
-            {% block importmap %}{{ importmap('app') }}{% endblock %} 
-            {{ parent() }}
-            <script src="{{ asset('js/ckeditor-init.js') }}"></script>
-            <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                document.querySelectorAll('textarea.ckeditor').forEach((el) => {
-                    ClassicEditor.create(el).catch(error => console.error(error));
-                });
-            });
-            </script>
+            {% block importmap %}
+                {{ importmap('app') }}
+            {% endblock %} 
         {% endblock %}
     </body>
 </html>
