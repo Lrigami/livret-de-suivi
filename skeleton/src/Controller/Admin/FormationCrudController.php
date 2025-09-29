@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use App\Controller\Admin\FormationTypeCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -132,6 +133,16 @@ class FormationCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $isArchived = BooleanField::new('isStorage', 'Archive')
+                ->hideOnForm()
+                ->setFormTypeOptions(['disabled' => true]);
+
+        // Seul un super admin peut archivée une formation prématurément
+        if(in_array("ROLE_SUPERADMIN", $this->getUser()->getRoles()))
+        {
+            $isArchived->setFormTypeOptions(['disabled' => false]);
+        }
+
         return [
             IdField::new('id')->hideOnForm(),
             TextField::new('name', 'Nom de la formation'),
@@ -163,6 +174,7 @@ class FormationCrudController extends AbstractCrudController
                     'by_reference' => false,
                 ])
                 ->onlyOnForms(),
+            $isArchived,
             // CollectionField::new('students')
             //     ->allowAdd(true)
             //     ->allowDelete(true)
