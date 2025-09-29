@@ -44,7 +44,8 @@ class BookletPeriodFormType extends AbstractType
                 'label' => 'Contenu',
                 'required' => false,
                 'attr' => [
-                    'class' => $isEditable ? 'ckeditor readonly-false' : 'ckeditor',
+                    'class' => $isEditable ? 'ckeditor readonly-false' : 'ckeditor readonly-true',
+                    'disabled' => $isEditable ? false : true,
                 ],
             ]);
         });
