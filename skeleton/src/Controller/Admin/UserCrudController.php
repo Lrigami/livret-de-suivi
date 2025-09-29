@@ -30,7 +30,12 @@ class UserCrudController extends AbstractCrudController
             ->setLabel("Mot de passe")
             ->setFormType(PasswordType::class)
             ->setFormTypeOption('empty_data', '')
+            ->setDisabled(true)
             ->hideOnIndex();
+        if(in_array("ROLE_SUPERADMIN", $this->getUser()->getRoles()))
+        {
+            $password->setDisabled(false); 
+        }
 
         return [
             IdField::new('id')->hideOnForm(),
