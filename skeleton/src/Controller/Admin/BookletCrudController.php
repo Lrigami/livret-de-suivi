@@ -21,13 +21,21 @@ class BookletCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
-            AssociationField::new('student', 'Apprenant')
-                ->setFormTypeOptions(['disabled' => true]),
-            AssociationField::new('formation', 'Formation')
-                ->setFormTypeOptions(['disabled' => true]),
-            BooleanField::new('archived')->hideOnForm(),
-            CollectionField::new('filteredBookletPeriods', 'Périodes')
+        // un formateur peut consulter tous les livrets, et les exporter
+        // mais seul le formateur de la formation à laquelle appartient le livret
+        // peut éditer le livret de suivi en question
+
+        $student = AssociationField::new('student', 'Apprenant')
+            ->setFormTypeOptions(['disabled' => true]);
+
+        $formation =  AssociationField::new('formation', 'Formation')
+            ->setFormTypeOptions(['disabled' => true]);
+
+        // par défaut l'archivage du livret de suivi est désactivée. 
+        $isArchived = BooleanField::new('archived')->hideOnForm()
+            ->setFormTypeOptions(['disabled' => true]);
+
+        $filteredBookletPeriods = CollectionField::new('filteredBookletPeriods', 'Périodes')
                 ->onlyOnForms()
                 ->allowAdd(false)
                 ->allowDelete(false)
@@ -35,7 +43,19 @@ class BookletCrudController extends AbstractCrudController
                 ->setEntryIsComplex(true) // indique qu’on ne veut pas créer de nouvelles entités
                 ->setFormTypeOptions([
                     'by_reference' => false,
-                ])
+                ]);
+
+        // Seul un super admin peut archiver prématurément un livret de suivi d'un apprenant. 
+        if(in_array("ROLE_SUPERADMIN", $this->getUser()->getRoles()))
+        {
+            $isArchived->setFormTypeOptions(['disabled' => false]);
+        }
+
+        return [
+            $student,
+            $formation, 
+            $isArchived, 
+            $filteredBookletPeriods,
         ];
     }
 }

@@ -314,7 +314,7 @@ const editorConfig = {
 };
 
 function initCkeditors() {
-    document.querySelectorAll('textarea.ckeditor').forEach((el) => {
+    document.querySelectorAll('textarea.ckeditor.readonly-false').forEach((el) => {
         // éviter de ré-initialiser deux fois le même textarea
         if (!el.classList.contains('ck-editor-enabled')) {
             ClassicEditor.create(el, editorConfig, {
