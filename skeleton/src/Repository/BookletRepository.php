@@ -18,6 +18,10 @@ class BookletRepository extends ServiceEntityRepository
 
     public function findByStudentAndFormation($student, $formation): ?Booklet
     {
+        if ($formation->getId() === null) {
+            throw new \RuntimeException('La formation doit être persistée avant d’être utilisée dans une requête.');
+        }
+
         return $this->createQueryBuilder('b')
             ->andWhere('b.student = :student')
             ->andWhere('b.formation = :formation')
@@ -36,11 +40,11 @@ class BookletRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findByFormation($formation)
+    public function findByFormationId($formationId)
     {
         return $this->createQueryBuilder('b')
-            ->andWhere('b.formation = :formation')
-            ->setParameter('formation', $formation)
+            ->andWhere('IDENTIFY(b.formation) = :formationId')
+            ->setParameter('formationId', $formationId)
             ->getQuery()
             ->getResult();
     }

@@ -113,22 +113,30 @@ class FormationCrudController extends AbstractCrudController
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-      if ($entityInstance instanceof Formation) {
+        if ($entityInstance instanceof Formation) {
             $this->computeHours($entityInstance);
-            $this->createBooklets($entityInstance, $entityManager);
         }
 
         parent::persistEntity($entityManager, $entityInstance);
+
+        if ($entityInstance instanceof Formation) {
+                $this->createBooklets($entityInstance, $entityManager);
+                $entityManager->flush();
+            }
     }
 
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         if ($entityInstance instanceof Formation) {
             $this->computeHours($entityInstance);
-            $this->createBooklets($entityInstance, $entityManager);
         }
 
         parent::updateEntity($entityManager, $entityInstance);
+
+        if ($entityInstance instanceof Formation) {
+            $this->createBooklets($entityInstance, $entityManager);
+            $entityManager->flush();
+        }
     }
 
     public function configureFields(string $pageName): iterable
