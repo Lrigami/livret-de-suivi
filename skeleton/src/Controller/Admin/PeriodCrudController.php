@@ -39,14 +39,12 @@ class PeriodCrudController extends AbstractCrudController
                 ->setFormTypeOptions([
                     'widget' => 'single_text',
                     'html5' => true,
-                    'data' => (new \DateTimeImmutable())->setTime(8, 45), // 08h45 par défaut
                 ]),
             DateTimeField::new('endDate', 'Fin le')
                 ->setFormTypeOptions([
                     'widget' => 'single_text',
                     'html5' => true,
-                    'data' => (new \DateTimeImmutable())->setTime(16, 45), // 16h45 par défaut
-                ]),
+                ])
         ];
     }
 }
