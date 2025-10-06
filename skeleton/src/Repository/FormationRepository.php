@@ -26,6 +26,16 @@ class FormationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findToArchive(\DateTimeImmutable $today): array
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.end_at < :today')
+            ->andWhere('f.isStorage = false')
+            ->setParameter('today', $today)
+            ->getQuery()
+            ->getResult();
+    }
 //    /**
 //     * @return Formation[] Returns an array of Formation objects
 //     */

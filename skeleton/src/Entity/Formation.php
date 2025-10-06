@@ -147,6 +147,15 @@ class Formation
         return $this;
     }
 
+    public function archive(): void
+    {
+        $this->storage = true;
+        
+        foreach ($this->booklets as $booklet) {
+            $booklet->archive();
+        }
+    }
+
     public function getNbHourCenter(): ?int
     {
         return $this->nb_hour_center;
